@@ -31,15 +31,36 @@ const Navbar = () => {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-storybook-purple">StoryBook</span>
-            <span className="text-2xl font-bold text-storybook-orange">Emporium</span>
+            <span className="text-2xl font-bold text-storybook-purple">Vision</span>
+            <span className="text-2xl font-bold text-storybook-orange">Wall</span>
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button className="block md:hidden" onClick={toggleMenu}>
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        {/* Mobile Cart and Orders */}
+        <div className="flex items-center gap-2 md:hidden">
+          <Button variant="outline" size="icon" asChild className="relative">
+            <Link to="/cart">
+              <ShoppingCart className="h-5 w-5" />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-storybook-purple text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {itemCount > 9 ? '9+' : itemCount}
+                </span>
+              )}
+              <span className="sr-only">Shopping Cart</span>
+            </Link>
+          </Button>
+          {user && (
+            <Button variant="outline" size="icon" asChild>
+              <Link to="/orders">
+                <User className="h-5 w-5" />
+                <span className="sr-only">My Orders</span>
+              </Link>
+            </Button>
+          )}
+          <button className="block md:hidden" onClick={toggleMenu}>
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-6">
@@ -155,21 +176,6 @@ const Navbar = () => {
               >
                 Contact
               </Link>
-              <Link 
-                to="/cart" 
-                className="flex items-center space-x-3 text-foreground hover:text-storybook-purple transition-colors text-lg py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <div className="relative">
-                  <ShoppingCart className="h-6 w-6" />
-                  {itemCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-storybook-purple text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {itemCount > 9 ? '9+' : itemCount}
-                    </span>
-                  )}
-                </div>
-                <span>Cart</span>
-              </Link>
               
               {/* Mobile User Menu */}
               {user ? (
@@ -183,13 +189,6 @@ const Navbar = () => {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
-                  </Link>
-                  <Link 
-                    to="/orders" 
-                    className="text-foreground hover:text-storybook-purple transition-colors text-lg py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    My Orders
                   </Link>
                   <button
                     onClick={() => {

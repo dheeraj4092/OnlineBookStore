@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cartStore";
 import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -12,16 +13,29 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCartStore();
   const { toast } = useToast();
+  const [quantity, setQuantity] = useState(1);
+
+  const incrementQuantity = () => {
+    setQuantity(prev => prev + 1);
+  };
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(prev => prev - 1);
+    }
+  };
 
   const handleAddToCart = () => {
     addToCart({
       ...product,
-      quantity: 1
+      quantity
     });
     toast({
       title: "Added to cart",
-      description: `${product.title} has been added to your cart.`
+      description: `${product.title} (${quantity}) has been added to your cart.`
     });
+    // Reset quantity after adding to cart
+    setQuantity(1);
   };
 
   return (
@@ -45,7 +59,30 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
           {product.description}
         </p>
-        <p className="font-bold text-lg mb-4">${product.price.toFixed(2)}</p>
+        <p className="font-bold text-lg mb-4">₹{product.price.toFixed(2)}</p>
+        
+        {/* Quantity Controls */}
+        <div className="flex items-center justify-center space-x-4 mb-4">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={decrementQuantity}
+            className="w-8 h-8"
+          >
+            -
+          </Button>
+          <span className="text-lg font-semibold w-8 text-center">
+            {quantity}
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={incrementQuantity}
+            className="w-8 h-8"
+          >
+            +
+          </Button>
+        </div>
       </CardContent>
       <CardFooter className="p-4 pt-0 sm:p-6 sm:pt-0">
         <Button

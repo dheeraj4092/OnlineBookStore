@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col space-y-4">
-            <h3 className="text-lg font-bold">StoryBook Emporium</h3>
+            <h3 className="text-lg font-bold">Vision Wall</h3>
             <p className="text-muted-foreground">
               Bringing imagination to life through personalized books and beautiful posters for children and teenagers.
             </p>
@@ -74,7 +74,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-muted-foreground/20 text-center text-muted-foreground">
-          <p>&copy; {currentYear} StoryBook Emporium. All rights reserved.</p>
+          <p>&copy; {currentYear} Vision Wall. All rights reserved.</p>
         </div>
       </div>
     </footer>

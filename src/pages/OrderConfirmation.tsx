@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { CheckCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Order } from "@/stores/orderStore";
+import { useNavigate } from "react-router-dom";
 
 const OrderConfirmation = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -14,6 +15,7 @@ const OrderConfirmation = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
   
   useEffect(() => {
     const fetchOrder = async () => {
@@ -67,22 +69,24 @@ const OrderConfirmation = () => {
   }
   
   if (!order) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow container py-12">
-          <div className="text-center py-12">
-            <h1 className="text-2xl font-bold mb-4">Order Not Found</h1>
-            <p className="text-muted-foreground mb-8">The order you're looking for doesn't exist or has been removed.</p>
-            <Button asChild>
-              <Link to="/">Return to Home</Link>
-            </Button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <Navigate to="/" />;
   }
+
+  const formatMessage = () => {
+    const itemsList = order.items
+      .map(item => `- ${item.title} (Qty: ${item.quantity})`)
+      .join('\n');
+    
+    return `Hello! I have placed an order with the following details:
+
+Order ID: ${order.id}
+Total Amount: ₹${order.total.toFixed(2)}
+
+Items:
+${itemsList}
+
+Please confirm the payment details and any customization requirements.`;
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -113,7 +117,7 @@ const OrderConfirmation = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total</p>
-                <p className="font-medium">${order.total.toFixed(2)}</p>
+                <p className="font-medium">₹{order.total.toFixed(2)}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Status</p>
@@ -140,12 +144,12 @@ const OrderConfirmation = () => {
                       <div>
                         <h3 className="font-medium">{item.title}</h3>
                         <p className="text-sm text-muted-foreground">
-                          Qty: {item.quantity} × ${item.price.toFixed(2)}
+                          Qty: {item.quantity} × ₹{item.price.toFixed(2)}
                         </p>
                       </div>
                     </div>
                     <div className="font-medium">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ₹{(item.price * item.quantity).toFixed(2)}
                     </div>
                   </div>
                 ))
@@ -159,7 +163,7 @@ const OrderConfirmation = () => {
             <div className="p-4 border-t bg-muted">
               <div className="flex justify-between mb-2">
                 <span>Subtotal</span>
-                <span>${order.total.toFixed(2)}</span>
+                <span>₹{order.total.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-muted-foreground mb-2">
                 <span>Shipping</span>
@@ -167,7 +171,7 @@ const OrderConfirmation = () => {
               </div>
               <div className="flex justify-between font-bold pt-2 border-t">
                 <span>Total</span>
-                <span>${order.total.toFixed(2)}</span>
+                <span>₹{order.total.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -201,18 +205,22 @@ const OrderConfirmation = () => {
           </div>
           
           <div className="text-center">
-            <p className="text-lg mb-6">
-              We'll contact you via WhatsApp shortly to confirm your order and collect payment.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <WhatsAppButton 
-                className="bg-storybook-purple hover:bg-storybook-dark-purple"
-                message={`Hi! I just placed order #${order.id ? order.id.slice(-8) : 'N/A'} and would like to complete my payment and provide customization details.`}
-              />
-              <Button asChild variant="outline">
-                <Link to="/">Continue Shopping</Link>
-              </Button>
+            <div className="bg-storybook-light-purple rounded-lg p-6 mb-8 border border-storybook-purple">
+              <h2 className="text-2xl font-bold mb-4">Complete Your Order</h2>
+              <p className="text-lg mb-6">
+                Please click the WhatsApp button below to send your order details. We'll confirm your payment and discuss any customization requirements.
+              </p>
+              <div className="flex flex-col items-center">
+                <WhatsAppButton
+                  message={formatMessage()}
+                  size="lg"
+                  className="w-full justify-center"
+                />
+              </div>
             </div>
+            <Button asChild variant="outline" className="mt-4">
+              <Link to="/">Continue Shopping</Link>
+            </Button>
           </div>
         </div>
       </main>

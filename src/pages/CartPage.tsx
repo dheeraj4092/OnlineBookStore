@@ -76,7 +76,7 @@ const CartPage = () => {
                             </div>
                           </div>
                         </td>
-                        <td className="p-4 text-center">${item.price.toFixed(2)}</td>
+                        <td className="p-4 text-center">₹{item.price.toFixed(2)}</td>
                         <td className="p-4 text-center">
                           <div className="flex items-center justify-center space-x-2">
                             <Button
@@ -98,7 +98,7 @@ const CartPage = () => {
                           </div>
                         </td>
                         <td className="p-4 text-center font-medium">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ₹{(item.price * item.quantity).toFixed(2)}
                         </td>
                         <td className="p-4 text-center">
                           <Button
@@ -133,7 +133,7 @@ const CartPage = () => {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>${getTotal().toFixed(2)}</span>
+                  <span>₹{getTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
                   <span>Shipping</span>
@@ -144,7 +144,7 @@ const CartPage = () => {
               <div className="border-t pt-4 mb-6">
                 <div className="flex justify-between font-semibold text-lg">
                   <span>Total</span>
-                  <span>${getTotal().toFixed(2)}</span>
+                  <span>₹{getTotal().toFixed(2)}</span>
                 </div>
               </div>
               
@@ -158,7 +158,7 @@ const CartPage = () => {
                 <p className="text-sm text-center text-muted-foreground">
                   Payments and customization details will be collected via WhatsApp after checkout.
                 </p>
-                <WhatsAppButton className="w-full" message={`Hi! I have items in my cart and I'd like to place an order. Total: $${getTotal().toFixed(2)}`} />
+                <WhatsAppButton className="w-full" message={`Hi! I have items in my cart and I'd like to place an order. Total: ₹${getTotal().toFixed(2)}`} />
               </div>
             </div>
           </div>
